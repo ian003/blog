@@ -161,3 +161,34 @@ func GetTopic(tid string) (*Topic, error) {
 	_, err = o.Update(topic)
 	return topic, nil
 }
+
+//修改文章
+func ModifyTopic(tid, title, content string) error {
+	tidNum, err := strconv.ParseInt(tid, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	o := orm.NewOrm()
+	topic := &Topic{Id: tidNum}
+
+	if o.Read(topic) == nil {
+		topic.Title = title
+		topic.Content = content
+		topic.Updated = time.Now()
+		o.Update(topic)
+	}
+	return nil
+}
+
+//删除文章
+func DeleteTopic(tid string) error {
+	tidNum, err := strconv.ParseInt(tid, 10, 64)
+	if err != nil {
+		return err
+	}
+	o := orm.NewOrm()
+	topic := &Topic{Id: tidNum}
+	_, err = o.Delete(topic)
+	return err
+}
